@@ -1,11 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/manrope";
-import "@fontsource-variable/noto-serif-devanagari";
-import "@fontsource/cormorant-garamond/400.css";
-import "@fontsource/cormorant-garamond/500.css";
-import "@fontsource/cormorant-garamond/600.css";
+import localFont from "next/font/local";
+import "@fontsource-variable/noto-sans-devanagari";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
+
+const seasons = localFont({
+  src: [
+    { path: "./fonts/Fontspring-DEMO-theseasons-lt.otf", weight: "300", style: "normal" },
+    { path: "./fonts/Fontspring-DEMO-theseasons-ltit.otf", weight: "300", style: "italic" },
+    { path: "./fonts/Fontspring-DEMO-theseasons-reg.otf", weight: "400", style: "normal" },
+    { path: "./fonts/Fontspring-DEMO-theseasons-it.otf", weight: "400", style: "italic" },
+    { path: "./fonts/Fontspring-DEMO-theseasons-bd.otf", weight: "700", style: "normal" },
+    { path: "./fonts/Fontspring-DEMO-theseasons-bdit.otf", weight: "700", style: "italic" },
+  ],
+  variable: "--font-seasons",
+  display: "swap",
+  fallback: ["Georgia", "serif"],
+  adjustFontFallback: "Times New Roman",
+});
 
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
@@ -34,7 +46,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={seasons.variable}>
       <body>{children}</body>
     </html>
   );
