@@ -4,12 +4,11 @@ import "@fontsource-variable/noto-serif-devanagari";
 import "@fontsource/cormorant-garamond/400.css";
 import "@fontsource/cormorant-garamond/500.css";
 import "@fontsource/cormorant-garamond/600.css";
+import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: getSiteUrl(),
   title: "Prachi & Pratik | 24 October 2026",
   description: "You are invited to celebrate Prachi and Pratik on 24 October 2026.",
   icons: { icon: "/favicon.svg" },
