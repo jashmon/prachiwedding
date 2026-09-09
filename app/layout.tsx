@@ -1,19 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import "@fontsource-variable/noto-sans-devanagari";
+import "@fontsource/gotu/400.css";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
-const seasons = localFont({
-  src: [
-    { path: "./fonts/Fontspring-DEMO-theseasons-lt.otf", weight: "300", style: "normal" },
-    { path: "./fonts/Fontspring-DEMO-theseasons-ltit.otf", weight: "300", style: "italic" },
-    { path: "./fonts/Fontspring-DEMO-theseasons-reg.otf", weight: "400", style: "normal" },
-    { path: "./fonts/Fontspring-DEMO-theseasons-it.otf", weight: "400", style: "italic" },
-    { path: "./fonts/Fontspring-DEMO-theseasons-bd.otf", weight: "700", style: "normal" },
-    { path: "./fonts/Fontspring-DEMO-theseasons-bdit.otf", weight: "700", style: "italic" },
-  ],
-  variable: "--font-seasons",
+const bakers = localFont({
+  src: "./fonts/TT-Bakers-VF-Trial.ttf",
+  variable: "--font-bakers",
+  weight: "100 900",
+  style: "normal",
   display: "swap",
   fallback: ["Georgia", "serif"],
   adjustFontFallback: "Times New Roman",
@@ -41,12 +36,13 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
   themeColor: "#171713",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={seasons.variable}>
+    <html lang="en" className={bakers.variable}>
       <body>{children}</body>
     </html>
   );

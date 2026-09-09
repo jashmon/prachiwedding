@@ -10,7 +10,7 @@ export function Events() {
       </div>
       <div className="event-fragments">
         {wedding.events.map((event, index) => (
-          <article className={`event-fragment event-${event.tone}`} key={event.name} tabIndex={0}>
+          <article className={`event-fragment event-${event.tone}`} key={event.name}>
             <div className="event-border" aria-hidden="true"><i /><i /><i /><i /></div>
             <p className="event-index">{String(index + 1).padStart(2, "0")}</p>
             <div className="event-title-wrap">
@@ -23,6 +23,7 @@ export function Events() {
           </article>
         ))}
       </div>
+      <p className="mobile-swipe-hint" aria-hidden="true">Swipe for every celebration <span>→</span></p>
     </section>
   );
 }

@@ -1,13 +1,14 @@
 import { wedding } from "@/data/wedding";
 import { Ornament } from "./Ornament";
+import { CharacterPair } from "./CharacterPair";
 
 export function Closing({ onRsvp }: { onRsvp: () => void }) {
   return (
     <footer className="closing-section">
       <div className="closing-inner">
         <p className="closing-small">{wedding.bride} &amp; {wedding.groom}</p>
-        <h2>See you<br />there.</h2>
-        <p className="closing-farewell" lang="hi">{wedding.devanagari.farewell}</p>
+        <h2>Your Presence<br />means everything<br />to us.</h2>
+        <CharacterPair action="wave" className="closing-characters" />
         <p className="closing-indic" lang="hi">{wedding.blessing}</p>
         <div className="closing-meta">
           <p>24.10.26</p>

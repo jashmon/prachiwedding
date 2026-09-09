@@ -10,11 +10,6 @@ export function Details({ onRsvp }: { onRsvp: () => void }) {
         <h2 id="details-title">The useful<br />bits.</h2>
       </div>
       <div className="details-list">
-        <div className="detail-item detail-date">
-          <p>Date <span lang="hi">{wedding.detailLabels.date}</span></p>
-          <strong>24 October 2026</strong>
-          <span>Saturday</span>
-        </div>
         <div className="detail-item detail-venue">
           <p>Venue <span lang="hi">{wedding.detailLabels.venue}</span></p>
           <strong>{wedding.venue}</strong>
@@ -32,14 +27,20 @@ export function Details({ onRsvp }: { onRsvp: () => void }) {
         </div>
         <div className="detail-item detail-contact">
           <p>Contact <span lang="hi">{wedding.detailLabels.contact}</span></p>
-          <strong>{wedding.contact}</strong>
-          <span>We will update this invitation as plans are confirmed.</span>
+          <div className="contact-list">
+            {wedding.contacts.map((contact) => (
+              <a key={contact.phone} href={`tel:+91${contact.phone}`}>
+                <strong>{contact.name}</strong>
+                <span>{contact.phone}</span>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
       <div className="details-rsvp">
         <Ornament />
         <span className="details-rsvp-indic" lang="hi">{wedding.devanagari.rsvp}</span>
-        <p>Will you join us?</p>
+        <p>Can’t wait to see you!</p>
         <button type="button" className="ink-button" onClick={onRsvp}>
           <span>Send RSVP</span><span aria-hidden="true">↗</span>
         </button>

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="560" viewBox="0 0 400 560" role="img" aria-labelledby="pratik-title pratik-desc" data-character="pratik" data-look="wedding" data-action="idle">
+<title id="pratik-title">Pratik · layered character</title><desc id="pratik-desc">A warm paper-cut inspired character with interchangeable wedding, haldi, casual and gym clothes. Separate head, eyes, arms and body for animation.</desc>
+<defs>
+<linearGradient id="pratik-skin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffdfb7"/><stop offset=".65" stop-color="#ecc098"/><stop offset="1" stop-color="#cd8c69"/></linearGradient>
+<linearGradient id="pratik-hair" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#403730"/><stop offset=".6" stop-color="#272521"/><stop offset="1" stop-color="#201c1a"/></linearGradient>
+<linearGradient id="pratik-cloth" x1="0" y1="0" x2="1" y2=".4"><stop stop-color="var(--fabric-light,#df5545)"/><stop offset=".5" stop-color="var(--fabric,#b72e35)"/><stop offset="1" stop-color="var(--fabric-dark,#801e2c)"/></linearGradient>
+<linearGradient id="pratik-gold"><stop stop-color="#b98642"/><stop offset=".45" stop-color="#f2d895"/><stop offset="1" stop-color="#c29a54"/></linearGradient>
+<radialGradient id="pratik-blush"><stop stop-color="#db725f" stop-opacity=".58"/><stop offset="1" stop-color="#db725f" stop-opacity="0"/></radialGradient>
+<filter id="pratik-depth" x="-20%" y="-15%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="2" flood-color="#4b2920" flood-opacity=".18"/></filter>
+</defs>
+<style>
+[data-character="pratik"]{--fabric:#b72e35;--fabric-light:#df5545;--fabric-dark:#801e2c}
+[data-character="pratik"][data-look="haldi"]{--fabric:#eeb525;--fabric-light:#ffdb59;--fabric-dark:#c58b13}
+[data-character="pratik"][data-look="casual"]{--fabric:#4c799e;--fabric-light:#80a5be;--fabric-dark:#31546e}
+[data-character="pratik"][data-look="gym"]{--fabric:#77549b;--fabric-light:#a381bd;--fabric-dark:#503a70}
+[data-character="pratik"] [data-outfit]{display:none}
+[data-character="pratik"][data-look="wedding"] [data-outfit="wedding"]{display:inline}
+[data-character="pratik"][data-look="haldi"] [data-outfit="haldi"]{display:inline}
+[data-character="pratik"][data-look="casual"] [data-outfit="casual"]{display:inline}
+[data-character="pratik"][data-look="gym"] [data-outfit="gym"]{display:inline}
+[data-character="pratik"] [data-part="head"]{transform-origin:200px 268px}
+[data-character="pratik"] [data-part="arm-left"]{transform-origin:155px 286px}
+[data-character="pratik"] [data-part="arm-right"]{transform-origin:245px 286px}
+[data-character="pratik"] [data-part="namaste-arms"]{display:none}
+[data-character="pratik"][data-action="namaste"] [data-part="arm-left"],
+[data-character="pratik"][data-action="namaste"] [data-part="arm-right"]{display:none}
+[data-character="pratik"][data-action="namaste"] [data-part="namaste-arms"]{display:inline}
+[data-character="pratik"][data-action="namaste"] [data-part="head"]{animation:pratik-namaste 2.8s ease-in-out infinite}
+[data-character="pratik"][data-action="wave"] [data-part="arm-right"]{animation:pratik-wave 1.2s ease-in-out infinite}
+[data-character="pratik"][data-action="celebrate"] [data-part="body"]{animation:pratik-bounce .75s ease-in-out infinite}
+[data-character="pratik"][data-action="celebrate"] [data-part="arm-left"]{transform:rotate(135deg)}
+[data-character="pratik"][data-action="celebrate"] [data-part="arm-right"]{transform:rotate(-135deg)}
+[data-character="pratik"][data-action="nod"] [data-part="head"]{animation:pratik-nod 1.2s ease-in-out infinite}
+@keyframes pratik-wave{0%,100%{transform:rotate(-140deg)}50%{transform:rotate(-115deg)}}
+@keyframes pratik-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes pratik-nod{0%,100%{transform:rotate(0)}50%{transform:rotate(7deg)}}
+@keyframes pratik-namaste{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(3px) rotate(2deg)}}
+@media(prefers-reduced-motion:reduce){[data-character="pratik"] *{animation:none!important}}
+</style>
+<ellipse data-part="shadow" cx="200" cy="527" rx="88" ry="12" fill="#553d31" opacity=".12"/>
+<g data-part="body" filter="url(#pratik-depth)">
+
+<g data-part="leg-left"><path d="M158 411H195L188 510H161Z" fill="url(#pratik-skin)"/><path d="M159 503Q174 511 189 501L192 518Q163 532 143 523Q143 513 159 503" fill="#322b27"/></g>
+<g data-part="leg-right"><path d="M205 411H241L239 510H211Z" fill="url(#pratik-skin)"/><path d="M211 502Q224 511 239 503Q256 511 257 523Q234 531 208 518Z" fill="#322b27"/></g>
+<g data-part="neck"><path d="M181 244H217L222 282Q199 302 177 281Z" fill="url(#pratik-skin)"/><path d="M181 249Q201 268 217 251V268Q199 281 181 266Z" fill="#ae6b50" opacity=".3"/></g>
+<g data-part="wardrobe">
+<g data-outfit="wedding"><path d="M158 418H241L235 503H210L199 458 190 503H164Z" fill="#e1d0ad"/><path d="M151 280 183 270 219 270 249 282 260 450Q203 462 140 450Z" fill="url(#pratik-cloth)"/><path d="M181 272 196 291 217 273M199 292V439" stroke="#6b2630" stroke-opacity=".35" fill="none" stroke-width="3"/><path d="M181 269 197 286 218 269 216 283 199 301 183 285Z" fill="url(#pratik-gold)"/><circle cx="201" cy="311" r="3.2" fill="url(#pratik-gold)"/><circle cx="201" cy="333" r="3.2" fill="url(#pratik-gold)"/><circle cx="201" cy="355" r="3.2" fill="url(#pratik-gold)"/><path d="M155 282 168 277 160 430 146 430ZM231 277 246 282 252 430 239 430Z" fill="url(#pratik-gold)" opacity=".7"/></g>
+<g data-outfit="haldi"><path d="M157 419H241L235 503H209L199 454 190 503H164Z" fill="#d0cbbb"/><path d="M151 280 183 270 219 270 249 282 260 450Q203 462 140 450Z" fill="url(#pratik-cloth)"/><path d="M181 272 196 291 217 273M199 292V439" stroke="#6b2630" stroke-opacity=".35" fill="none" stroke-width="3"/><path d="M181 269 197 286 218 269 216 283 199 301 183 285Z" fill="url(#pratik-gold)"/><circle cx="201" cy="311" r="3.2" fill="url(#pratik-gold)"/><circle cx="201" cy="333" r="3.2" fill="url(#pratik-gold)"/><circle cx="201" cy="355" r="3.2" fill="url(#pratik-gold)"/></g>
+<g data-outfit="casual"><path d="M156 350H242L233 501H207L199 403 190 501H162Z" fill="#446679"/><path d="M199 371V406M164 486H190M208 486H234" stroke="#86a0aa" stroke-width="5" fill="none"/><path d="M155 279Q175 270 181 271L219 271Q234 272 247 281L253 363Q199 380 148 363Z" fill="url(#pratik-cloth)"/><path d="M181 272Q198 300 219 272" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="4"/><path d="M180 271 198 288 188 301 173 278M218 271 200 288 211 301 227 279" fill="#93b2c4"/><path d="M200 291V364M217 309H237V331Q227 337 217 331Z" fill="none" stroke="#284d69" stroke-width="2"/></g>
+<g data-outfit="gym"><path d="M155 351H243L236 421H208L199 383 190 421H159Z" fill="#303039"/><path d="M234 363V415" stroke="url(#pratik-cloth)" stroke-width="5"/><path d="M155 279Q175 270 181 271L219 271Q234 272 247 281L253 363Q199 380 148 363Z" fill="url(#pratik-cloth)"/><path d="M181 272Q198 300 219 272" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="4"/></g>
+</g>
+<g data-part="arm-left"><path d="M158 282Q141 283 135 308L122 361Q121 379 133 384Q143 384 145 368L160 325Z" fill="url(#pratik-skin)"/><path d="M144 363Q150 363 151 372L147 383" stroke="#d9a078" stroke-width="5" fill="none" stroke-linecap="round"/>
+<path d="M161 279Q141 279 133 309L156 319 168 291Z" fill="url(#pratik-cloth)"/><path d="M154 315 135 308" stroke="#fff" opacity=".2" stroke-width="3"/>
+</g><g data-part="arm-right"><path d="M242 282Q259 283 265 308L278 361Q279 379 267 384Q257 384 255 368L240 325Z" fill="url(#pratik-skin)"/><path d="M256 363Q250 363 249 372L253 383" stroke="#d9a078" stroke-width="5" fill="none" stroke-linecap="round"/>
+<path d="M239 279Q259 279 267 309L244 319 232 291Z" fill="url(#pratik-cloth)"/><path d="M246 315 265 308" stroke="#fff" opacity=".2" stroke-width="3"/>
+</g>
+<g data-part="namaste-arms">
+  <path d="M156 290Q151 320 171 342M244 290Q249 320 229 342" fill="none" stroke="url(#pratik-cloth)" stroke-width="27" stroke-linecap="round"/>
+  <path d="M171 339Q184 331 194 318M229 339Q216 331 206 318" fill="none" stroke="url(#pratik-skin)" stroke-width="16" stroke-linecap="round"/>
+  <path d="M194 344Q192 324 196 300Q200 291 204 300Q208 324 206 344Q200 353 194 344Z" fill="url(#pratik-skin)" stroke="#c98c69" stroke-width="1.5"/>
+  <path d="M200 303V344" stroke="#c98c69" stroke-width="1.5" opacity=".65"/>
+  
+</g>
+<g data-part="head">
+<ellipse cx="112" cy="176" rx="17" ry="25" fill="url(#pratik-skin)"/><ellipse cx="288" cy="176" rx="17" ry="25" fill="url(#pratik-skin)"/>
+<path d="M117 112Q117 67 201 65Q283 66 283 124L280 202Q272 258 202 272Q131 264 118 211Z" fill="url(#pratik-skin)"/>
+<path d="M126 185Q125 234 160 250" stroke="#fff1d5" stroke-opacity=".25" stroke-width="5" fill="none"/>
+<ellipse cx="146" cy="211" rx="29" ry="20" fill="url(#pratik-blush)"/><ellipse cx="256" cy="211" rx="29" ry="20" fill="url(#pratik-blush)"/>
+<path d="M117 190Q127 226 148 229Q159 209 178 220Q200 233 224 220Q242 211 254 230Q274 217 282 188L278 224Q269 263 202 277Q138 269 123 238Z" fill="url(#pratik-hair)"/><path d="M167 232Q199 215 235 233Q224 260 200 259Q178 258 167 232" fill="url(#pratik-skin)"/>
+<g data-part="brows" fill="url(#pratik-hair)"><path d="M136 143Q151 130 173 136Q179 138 176 146Q152 142 137 150Z"/><path d="M224 137Q248 130 265 145L264 151Q241 143 224 147Q219 144 224 137Z"/></g>
+<g data-part="eyes">
+<g data-part="eye-left"><ellipse cx="156" cy="177" rx="25" ry="29" fill="#fff7e8" stroke="#bd9277" stroke-width="2"/><g data-part="pupil"><ellipse cx="159" cy="178" rx="15" ry="20" fill="#634132"/><ellipse cx="161" cy="179" rx="10" ry="15" fill="#292321"/><circle cx="165" cy="170" r="5" fill="#fff"/><circle cx="156" cy="186" r="2" fill="#fff" opacity=".5"/></g></g><g data-part="eye-right"><ellipse cx="243" cy="177" rx="25" ry="29" fill="#fff7e8" stroke="#bd9277" stroke-width="2"/><g data-part="pupil"><ellipse cx="246" cy="178" rx="15" ry="20" fill="#634132"/><ellipse cx="248" cy="179" rx="10" ry="15" fill="#292321"/><circle cx="252" cy="170" r="5" fill="#fff"/><circle cx="243" cy="186" r="2" fill="#fff" opacity=".5"/></g></g>
+</g>
+<path data-part="nose" d="M199 179 192 210Q201 216 208 209" fill="#d39170" stroke="#bd7e61" stroke-width="2" stroke-linejoin="round"/>
+<g data-part="mouth"><path d="M176 228Q199 238 224 227Q218 250 200 251Q183 249 176 228Z" fill="#873e32"/><path d="M181 230Q200 235 219 230L215 237Q198 242 185 236Z" fill="#fff9e9"/><path d="M190 246Q201 238 211 246Q201 252 190 246Z" fill="#de8b7a"/></g>
+<g data-part="hair-front"><path d="M113 157Q94 111 115 84L104 84 127 61 116 54Q157 53 175 33L170 24Q209 34 220 33L217 25Q287 44 278 101Q298 113 284 159L270 145 268 117Q248 121 231 104Q177 115 145 89Q123 107 126 146Z" fill="url(#pratik-hair)"/><path d="M126 63Q181 43 231 104M174 39Q239 46 258 99" fill="none" stroke="#716052" stroke-opacity=".35" stroke-width="3"/></g><g data-part="glasses" fill="#ffffff" fill-opacity=".08" stroke="#4e3a2d" stroke-width="7" stroke-linejoin="round"><path d="M119 157Q146 149 181 158L178 187Q174 208 151 208Q125 208 122 188Z"/><path d="M216 158Q248 149 277 158L274 187Q271 209 245 208Q220 208 217 187Z"/><path d="M181 164Q199 157 216 164M119 160 108 157M277 161 290 158" fill="none"/></g>
+</g></g></svg>

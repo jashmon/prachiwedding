@@ -32,6 +32,7 @@ export function Story() {
           <p>forever</p>
         </div>
       </div>
+      <p className="mobile-swipe-hint story-swipe-hint" aria-hidden="true">Swipe through our years <span>→</span></p>
     </section>
   );
 }

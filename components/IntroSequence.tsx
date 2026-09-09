@@ -7,8 +7,9 @@ export function IntroSequence() {
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const mobile = window.matchMedia("(max-width: 767px)").matches;
     const hasSeen = window.sessionStorage.getItem("wedding-intro-seen") === "yes";
-    if (reduce || hasSeen) {
+    if (reduce || mobile || hasSeen) {
       const frame = window.requestAnimationFrame(() => setDone(true));
       return () => window.cancelAnimationFrame(frame);
     }

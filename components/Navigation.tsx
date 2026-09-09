@@ -1,23 +1,30 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
-
 export function Navigation({ onRsvp }: { onRsvp: () => void }) {
   const nav = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!nav.current) return;
-    const trigger = ScrollTrigger.create({
-      trigger: "#invitation",
-      start: "top 72px",
-      onEnter: () => nav.current?.setAttribute("data-paper", "true"),
-      onLeaveBack: () => nav.current?.removeAttribute("data-paper"),
-    });
-    return () => trigger.kill();
+    const invitation = document.querySelector<HTMLElement>("#invitation");
+    if (!invitation) return;
+    let ticking = false;
+    const update = () => {
+      nav.current?.toggleAttribute("data-paper", window.scrollY >= invitation.offsetTop - 72);
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", update);
+    };
   }, []);
 
   return (

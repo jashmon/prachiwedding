@@ -1,19 +1,24 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ornament } from "./Ornament";
 import { wedding } from "@/data/wedding";
-
-gsap.registerPlugin(ScrollTrigger);
+import { CharacterPair } from "./CharacterPair";
 
 export function InvitationIntro() {
   const root = useRef<HTMLElement>(null);
 
   useLayoutEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !root.current) return;
-    const ctx = gsap.context(() => {
+    const desktop = window.matchMedia("(min-width: 768px)").matches;
+    if (!desktop || window.matchMedia("(prefers-reduced-motion: reduce)").matches || !root.current) return;
+    let cancelled = false;
+    let cleanup = () => {};
+    void Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([gsapModule, triggerModule]) => {
+      if (cancelled || !root.current) return;
+      const gsap = gsapModule.default;
+      const { ScrollTrigger } = triggerModule;
+      gsap.registerPlugin(ScrollTrigger);
+      const ctx = gsap.context(() => {
       gsap.fromTo(".invitation-statement span", { yPercent: 110 }, {
         yPercent: 0,
         duration: 1,
@@ -27,8 +32,13 @@ export function InvitationIntro() {
         ease: "power3.inOut",
         scrollTrigger: { trigger: ".intro-ornament", start: "top 85%", once: true },
       });
-    }, root);
-    return () => ctx.revert();
+      }, root);
+      cleanup = () => ctx.revert();
+    });
+    return () => {
+      cancelled = true;
+      cleanup();
+    };
   }, []);
 
   return (
@@ -42,6 +52,7 @@ export function InvitationIntro() {
         <span>to be there as we begin</span>
         <span>the next chapter of our story.</span>
       </h2>
+      <CharacterPair action="namaste" className="intro-characters" />
       <p className="invitation-indic-statement" lang="hi">{wedding.devanagari.invitation}</p>
       <Ornament className="intro-ornament" />
       <p className="invitation-indic" lang="hi">{wedding.blessing}</p>

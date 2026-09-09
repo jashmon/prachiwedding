@@ -1,18 +1,22 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { wedding } from "@/data/wedding";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export function WeddingDate() {
   const root = useRef<HTMLElement>(null);
 
   useLayoutEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !root.current) return;
-    const ctx = gsap.context(() => {
+    const desktop = window.matchMedia("(min-width: 768px)").matches;
+    if (!desktop || window.matchMedia("(prefers-reduced-motion: reduce)").matches || !root.current) return;
+    let cancelled = false;
+    let cleanup = () => {};
+    void Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([gsapModule, triggerModule]) => {
+      if (cancelled || !root.current) return;
+      const gsap = gsapModule.default;
+      const { ScrollTrigger } = triggerModule;
+      gsap.registerPlugin(ScrollTrigger);
+      const ctx = gsap.context(() => {
       gsap.fromTo(".date-number span", { yPercent: 100 }, {
         yPercent: 0,
         stagger: 0.08,
@@ -24,8 +28,13 @@ export function WeddingDate() {
         rotate: 45,
         scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: 1 },
       });
-    }, root);
-    return () => ctx.revert();
+      }, root);
+      cleanup = () => ctx.revert();
+    });
+    return () => {
+      cancelled = true;
+      cleanup();
+    };
   }, []);
 
   return (

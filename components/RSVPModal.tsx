@@ -144,7 +144,7 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
           <div className="rsvp-form-wrap">
             <header className="rsvp-heading">
               <p className="rsvp-indic" lang="hi">आइए</p>
-              <h2 id="rsvp-title">Will you<br />be there?</h2>
+              <h2 id="rsvp-title">Can’t wait<br />to see you!</h2>
               <p>Tell us who is coming. We will save you a place.</p>
             </header>
 
