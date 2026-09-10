@@ -799,6 +799,13 @@ button:disabled { cursor: not-allowed; }
   .rsvp-heading > p:last-child { font-size: 0.9rem; }
   .rsvp-form-wrap form { grid-template-columns: 1fr; gap: 24px; margin-top: 42px; }
   .form-field, .form-field:first-child, .form-field:nth-child(3), .form-status, .submit-rsvp { grid-column: auto; }
+  .submit-rsvp {
+    width: 100%;
+    min-height: 64px;
+    padding: 0 20px;
+    align-items: center;
+    justify-content: space-between;
+  }
   .guest-counter { width: 100%; }
   .rsvp-footnote { text-align: left; }
   .rsvp-success { min-height: calc(100svh - 120px); }
