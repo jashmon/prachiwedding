@@ -1,10 +1,11 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { ArrowRight, CalendarBlank, Minus, Plus, X } from "@phosphor-icons/react";
+import { ArrowRight, CalendarBlank, Minus, Paperclip, Plus, X } from "@phosphor-icons/react";
 import { wedding } from "@/data/wedding";
 
-type Errors = Partial<Record<"name" | "email" | "guestCount", string>>;
+type Errors = Partial<Record<"name" | "email" | "guestCount" | "arrivalDate" | "arrivalTime", string>>;
+type TicketUpload = { path: string; text?: string };
 
 function downloadCalendar() {
   const content = [
@@ -36,6 +37,11 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [guestCount, setGuestCount] = useState(1);
+  const [arrivalDate, setArrivalDate] = useState("");
+  const [arrivalTime, setArrivalTime] = useState("");
+  const [ticket, setTicket] = useState<TicketUpload | null>(null);
+  const [ticketStatus, setTicketStatus] = useState<"idle" | "uploading" | "ready" | "error">("idle");
+  const [ticketMessage, setTicketMessage] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [serverMessage, setServerMessage] = useState("");
@@ -80,13 +86,43 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
     if (name.trim().length < 2) next.name = "Please enter your name.";
     if (!/^\S+@\S+\.\S+$/.test(email)) next.email = "Enter a valid email address.";
     if (guestCount < 1 || guestCount > 10) next.guestCount = "Choose between 1 and 10 guests.";
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(arrivalDate)) next.arrivalDate = "Choose your arrival date.";
+    if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(arrivalTime)) next.arrivalTime = "Choose your arrival time.";
     setErrors(next);
     return Object.keys(next).length === 0;
   };
 
+  const uploadTicket = async (file: File | undefined) => {
+    if (!file) return;
+    setTicketStatus("uploading");
+    setTicketMessage("Reading your ticket…");
+    setTicket(null);
+    try {
+      const formData = new FormData();
+      formData.append("ticket", file);
+      const response = await fetch("/api/ticket", { method: "POST", body: formData });
+      const payload = await response.json() as {
+        message?: string;
+        ticketPath?: string;
+        extraction?: { text?: string; arrivalDate?: string; arrivalTime?: string };
+      };
+      if (!response.ok || !payload.ticketPath) throw new Error(payload.message || "We could not process that ticket.");
+      setTicket({ path: payload.ticketPath, text: payload.extraction?.text });
+      if (payload.extraction?.arrivalDate) setArrivalDate(payload.extraction.arrivalDate);
+      if (payload.extraction?.arrivalTime) setArrivalTime(payload.extraction.arrivalTime);
+      setTicketStatus("ready");
+      setTicketMessage(payload.extraction?.arrivalDate || payload.extraction?.arrivalTime
+        ? "Arrival details found. Please check and confirm them below."
+        : "Ticket saved. Please enter your arrival details below.");
+    } catch (error) {
+      setTicketStatus("error");
+      setTicketMessage(error instanceof Error ? error.message : "We could not process that ticket.");
+    }
+  };
+
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (status === "loading" || !validate()) return;
+    if (status === "loading" || ticketStatus === "uploading" || !validate()) return;
     setStatus("loading");
     setServerMessage("");
 
@@ -94,7 +130,15 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
       const response = await fetch("/api/rsvp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), guestCount }),
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          guestCount,
+          arrivalDate,
+          arrivalTime,
+          ticketPath: ticket?.path,
+          ticketOcrText: ticket?.text,
+        }),
       });
       const payload = await response.json() as { message?: string; fields?: Record<string, string[]> };
       if (!response.ok) {
@@ -103,6 +147,8 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
             name: payload.fields.name?.[0],
             email: payload.fields.email?.[0],
             guestCount: payload.fields.guestCount?.[0],
+            arrivalDate: payload.fields.arrivalDate?.[0],
+            arrivalTime: payload.fields.arrivalTime?.[0],
           });
         }
         throw new Error(payload.message || "We could not save your RSVP.");
@@ -197,11 +243,54 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
                 {errors.email ? <p id="rsvp-email-error" className="field-error">{errors.email}</p> : null}
               </div>
 
+              <div className={`form-field${errors.arrivalDate ? " has-error" : ""}`}>
+                <label htmlFor="arrival-date">When do you arrive?</label>
+                <input
+                  id="arrival-date"
+                  name="arrival-date"
+                  type="date"
+                  value={arrivalDate}
+                  onChange={(event) => setArrivalDate(event.target.value)}
+                  aria-describedby={errors.arrivalDate ? "arrival-date-error" : "arrival-help"}
+                  aria-invalid={Boolean(errors.arrivalDate)}
+                />
+                {errors.arrivalDate ? <p id="arrival-date-error" className="field-error">{errors.arrivalDate}</p> : null}
+              </div>
+
+              <div className={`form-field${errors.arrivalTime ? " has-error" : ""}`}>
+                <label htmlFor="arrival-time">What&apos;s your arrival time?</label>
+                <input
+                  id="arrival-time"
+                  name="arrival-time"
+                  type="time"
+                  value={arrivalTime}
+                  onChange={(event) => setArrivalTime(event.target.value)}
+                  aria-describedby={errors.arrivalTime ? "arrival-time-error" : "arrival-help"}
+                  aria-invalid={Boolean(errors.arrivalTime)}
+                />
+                {errors.arrivalTime ? <p id="arrival-time-error" className="field-error">{errors.arrivalTime}</p> : null}
+              </div>
+
+              <div className="form-field ticket-field">
+                <label htmlFor="travel-ticket">Travel ticket <span>(optional)</span></label>
+                <input
+                  id="travel-ticket"
+                  className="ticket-input"
+                  name="travel-ticket"
+                  type="file"
+                  accept="application/pdf,image/jpeg,image/png,image/webp"
+                  onChange={(event) => void uploadTicket(event.target.files?.[0])}
+                  disabled={ticketStatus === "uploading"}
+                />
+                <p id="arrival-help" className="ticket-help"><Paperclip size={15} weight="light" /> Upload a PDF or photo ticket and we&apos;ll try to prefill the arrival details. Please confirm them before sending.</p>
+                {ticketStatus !== "idle" ? <p className={`ticket-status is-${ticketStatus}`} role="status">{ticketMessage}</p> : null}
+              </div>
+
               <p className="form-status" role="status" aria-live="polite">
                 {status === "error" ? serverMessage : status === "loading" ? "Saving your place..." : ""}
               </p>
-              <button type="submit" className="submit-rsvp" disabled={status === "loading"}>
-                <span>{status === "loading" ? "Sending" : "Yes, we will be there"}</span>
+              <button type="submit" className="submit-rsvp" disabled={status === "loading" || ticketStatus === "uploading"}>
+                <span>{status === "loading" ? "Sending" : ticketStatus === "uploading" ? "Reading ticket" : "Yes, we will be there"}</span>
                 <ArrowRight size={20} weight="light" />
               </button>
             </form>

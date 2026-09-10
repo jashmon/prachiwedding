@@ -632,7 +632,7 @@ button:disabled { cursor: not-allowed; }
 .rsvp-heading > p:last-child { margin-top: 30px; max-width: 360px; color: var(--ink-soft); font-size: 0.78rem; line-height: 1.65; }
 .rsvp-form-wrap form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 34px; margin-top: 56px; }
 .form-field { position: relative; }
-.form-field:first-child, .form-field:nth-child(3), .form-status, .submit-rsvp { grid-column: 1 / -1; }
+.form-field:first-child, .form-field:nth-child(3), .ticket-field, .form-status, .submit-rsvp { grid-column: 1 / -1; }
 .form-field label { display: block; margin-bottom: 10px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; }
 .form-field input {
   width: 100%;
@@ -652,6 +652,33 @@ button:disabled { cursor: not-allowed; }
 .form-field input:focus { border-color: var(--vermilion); }
 .form-field.has-error input { border-color: var(--error); }
 .field-error { margin-top: 8px; color: var(--error); font-size: 0.68rem; }
+.form-field label span { color: var(--ink-soft); font-size: 0.82em; font-weight: 400; letter-spacing: 0; text-transform: none; }
+.ticket-input {
+  height: auto !important;
+  padding: 12px 0 !important;
+  border-bottom: 1px solid rgba(49, 36, 33, 0.55) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.82rem !important;
+  line-height: 1.4;
+}
+.ticket-input::file-selector-button {
+  margin-right: 12px;
+  padding: 8px 10px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ticket-help { display: flex; gap: 8px; max-width: 520px; margin-top: 12px; color: var(--ink-soft); font-size: 0.73rem; line-height: 1.55; }
+.ticket-help svg { flex: 0 0 auto; margin-top: 3px; }
+.ticket-status { margin-top: 10px; font-size: 0.75rem; line-height: 1.45; }
+.ticket-status.is-ready { color: var(--leaf); }
+.ticket-status.is-error { color: var(--error); }
 .guest-counter { display: grid; grid-template-columns: 52px 1fr 52px; width: 220px; height: 52px; border: 1px solid rgba(23, 23, 19, 0.55); }
 .guest-counter button { display: grid; place-items: center; transition: color 250ms ease, background-color 250ms ease; }
 .guest-counter button:hover:not(:disabled) { color: var(--paper); background: var(--ink); }
@@ -798,7 +825,7 @@ button:disabled { cursor: not-allowed; }
   .rsvp-heading h2, .rsvp-success h2 { font-size: clamp(3.2rem, 14vw, 4.2rem); letter-spacing: -0.03em; line-height: .95; }
   .rsvp-heading > p:last-child { font-size: 0.9rem; }
   .rsvp-form-wrap form { grid-template-columns: 1fr; gap: 24px; margin-top: 42px; }
-  .form-field, .form-field:first-child, .form-field:nth-child(3), .form-status, .submit-rsvp { grid-column: auto; }
+  .form-field, .form-field:first-child, .form-field:nth-child(3), .ticket-field, .form-status, .submit-rsvp { grid-column: auto; }
   .submit-rsvp {
     width: 100%;
     min-height: 64px;
