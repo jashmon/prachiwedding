@@ -30,7 +30,6 @@ export function Navigation({ onRsvp }: { onRsvp: () => void }) {
   return (
     <nav ref={nav} className="site-nav" aria-label="Main navigation">
       <a className="nav-monogram" href="#top" aria-label="Prachi and Pratik, back to top">P × P</a>
-      <a className="nav-date" href="#date">24.10.26</a>
       <div className="nav-actions">
         <a href="#details">Details</a>
         <button type="button" onClick={onRsvp}>RSVP</button>

@@ -205,7 +205,7 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
                 <ArrowRight size={20} weight="light" />
               </button>
             </form>
-            <p className="rsvp-footnote">{wedding.dateDisplay} · {wedding.city}</p>
+            <p className="rsvp-footnote">{wedding.city}</p>
           </div>
         )}
       </section>

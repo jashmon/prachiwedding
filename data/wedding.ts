@@ -21,9 +21,6 @@ export const wedding = {
     invited: "आप सादर आमंत्रित हैं",
     familyBlessings: "परिवार के आशीर्वाद के साथ",
     invitation: "हमारी नई शुरुआत में आपका साथ हमें बेहद प्रिय होगा।",
-    date: "शनिवार, २४ अक्टूबर २०२६",
-    celebrations: "उत्सव के रंग",
-    story: "छह साल, कुछ यादें",
     details: "ज़रूरी बातें",
     rsvp: "आपसे मिलने का इंतज़ार है!",
   },
@@ -32,42 +29,6 @@ export const wedding = {
     dress: "पहनावा",
     contact: "संपर्क",
   },
-  events: [
-    {
-      name: "Haldi",
-      indic: "हल्दी",
-      note: "Sunshine, laughter and a little turmeric.",
-      when: "Schedule to follow",
-      tone: "turmeric",
-    },
-    {
-      name: "Mehendi",
-      indic: "मेहंदी",
-      note: "An unhurried afternoon with our favourite people.",
-      when: "Schedule to follow",
-      tone: "leaf",
-    },
-    {
-      name: "Sangeet",
-      indic: "संगीत",
-      note: "Good music and questionable dancing.",
-      when: "Schedule to follow",
-      tone: "oxide",
-    },
-    {
-      name: "Wedding",
-      indic: "विवाह",
-      note: "The moment we have been waiting for.",
-      when: "24 October 2026",
-      tone: "vermilion",
-    },
-  ],
-  story: [
-    { year: "2020", image: "/images/story-2020.jpg", line: "The beginning, captured on a phone and kept forever." },
-    { year: "2021", image: "/images/story-2021.jpg", line: "A year of finding joy in the ordinary." },
-    { year: "2023", image: "/images/story-2023.jpg", line: "New places, the same two people." },
-    { year: "2026", image: "/images/story-2026.jpg", line: "Six years later, here we are." },
-  ],
 } as const;
 
 export type Wedding = typeof wedding;
