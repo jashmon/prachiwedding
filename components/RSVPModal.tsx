@@ -3,9 +3,55 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { ArrowRight, CalendarBlank, Minus, Paperclip, Plus, X } from "@phosphor-icons/react";
 import { wedding } from "@/data/wedding";
+import { extractTicketDetails, type TicketDetails } from "@/lib/ticket-details";
 
 type Errors = Partial<Record<"name" | "whatsappNumber" | "guestCount" | "arrivalDate" | "arrivalTime", string>>;
 type TicketUpload = { path: string; text?: string };
+
+async function canvasToBlob(canvas: HTMLCanvasElement) {
+  return new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("The ticket image could not be prepared.")), "image/png");
+  });
+}
+
+async function recognizeText(input: File | Blob): Promise<string> {
+  const { createWorker } = await import("tesseract.js");
+  const worker = await createWorker("eng");
+  try {
+    const result = await worker.recognize(input);
+    return result.data.text;
+  } finally {
+    await worker.terminate();
+  }
+}
+
+async function readTicketOnDevice(file: File): Promise<TicketDetails> {
+  if (file.type !== "application/pdf") {
+    return extractTicketDetails(await recognizeText(file));
+  }
+
+  const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  const pdfDocument = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+  const page = await pdfDocument.getPage(1);
+  const content = await page.getTextContent();
+  const nativeText = content.items
+    .map((item) => "str" in item ? item.str : "")
+    .join(" ")
+    .trim();
+
+  if (nativeText.length > 20) return extractTicketDetails(nativeText);
+
+  const initialViewport = page.getViewport({ scale: 1 });
+  const scale = Math.min(1.5, 1600 / Math.max(initialViewport.width, initialViewport.height));
+  const viewport = page.getViewport({ scale: Math.max(scale, 1) });
+  const canvas = window.document.createElement("canvas");
+  canvas.width = Math.ceil(viewport.width);
+  canvas.height = Math.ceil(viewport.height);
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Your browser could not prepare that PDF.");
+  await page.render({ canvas, canvasContext: context, viewport }).promise;
+  return extractTicketDetails(await recognizeText(await canvasToBlob(canvas)));
+}
 
 function downloadCalendar() {
   const content = [
@@ -100,6 +146,13 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
     setTicketMessage("Reading your ticket…");
     setTicket(null);
     try {
+      let localExtraction: TicketDetails = {};
+      try {
+        localExtraction = await readTicketOnDevice(file);
+      } catch {
+        // A ticket that cannot be read can still be privately saved and entered manually.
+      }
+      setTicketMessage("Saving your ticket…");
       const formData = new FormData();
       formData.append("ticket", file);
       const response = await fetch("/api/ticket", { method: "POST", body: formData });
@@ -109,11 +162,16 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
         extraction?: { text?: string; arrivalDate?: string; arrivalTime?: string };
       };
       if (!response.ok || !payload.ticketPath) throw new Error(payload.message || "We could not process that ticket.");
-      setTicket({ path: payload.ticketPath, text: payload.extraction?.text });
-      if (payload.extraction?.arrivalDate) setArrivalDate(payload.extraction.arrivalDate);
-      if (payload.extraction?.arrivalTime) setArrivalTime(payload.extraction.arrivalTime);
+      const extraction = {
+        text: localExtraction.text || payload.extraction?.text,
+        arrivalDate: localExtraction.arrivalDate || payload.extraction?.arrivalDate,
+        arrivalTime: localExtraction.arrivalTime || payload.extraction?.arrivalTime,
+      };
+      setTicket({ path: payload.ticketPath, text: extraction.text });
+      if (extraction.arrivalDate) setArrivalDate(extraction.arrivalDate);
+      if (extraction.arrivalTime) setArrivalTime(extraction.arrivalTime);
       setTicketStatus("ready");
-      setTicketMessage(payload.extraction?.arrivalDate || payload.extraction?.arrivalTime
+      setTicketMessage(extraction.arrivalDate || extraction.arrivalTime
         ? "Arrival details found. Please check and confirm them below."
         : "Ticket saved. Please enter your arrival details below.");
     } catch (error) {
@@ -284,7 +342,7 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
                   onChange={(event) => void uploadTicket(event.target.files?.[0])}
                   disabled={ticketStatus === "uploading"}
                 />
-                <p id="arrival-help" className="ticket-help"><Paperclip size={15} weight="light" /> Upload a PDF or photo ticket and we&apos;ll try to prefill the arrival details. Please confirm them before sending.</p>
+                <p id="arrival-help" className="ticket-help"><Paperclip size={15} weight="light" /> We read the ticket on your device, then save it privately. Please confirm the arrival details before sending.</p>
                 {ticketStatus !== "idle" ? <p className={`ticket-status is-${ticketStatus}`} role="status">{ticketMessage}</p> : null}
               </div>
 
