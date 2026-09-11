@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { rsvpSchema, type RsvpRecord } from "@/lib/rsvp";
 import { saveRsvp } from "@/lib/rsvp-store";
+import { extractTicketDetails } from "@/lib/ticket-details";
 
 export const runtime = "nodejs";
 
@@ -32,6 +33,22 @@ export async function POST(request: Request) {
     body = await request.json();
   } catch {
     return NextResponse.json({ message: "We could not read that RSVP." }, { status: 400 });
+  }
+
+  // A ticket is an alternative to manually entering travel timing. The client
+  // sends its local OCR text, which lets us fill these fields before validation.
+  if (body && typeof body === "object" && "ticketPath" in body && "ticketOcrText" in body) {
+    const candidate = body as Record<string, unknown>;
+    const extracted = typeof candidate.ticketOcrText === "string" ? extractTicketDetails(candidate.ticketOcrText) : {};
+    if (typeof candidate.arrivalDate !== "string" || !candidate.arrivalDate) candidate.arrivalDate = extracted.arrivalDate || "";
+    if (typeof candidate.arrivalTime !== "string" || !candidate.arrivalTime) candidate.arrivalTime = extracted.arrivalTime || "";
+  }
+
+  if (body && typeof body === "object" && !("ticketPath" in body)) {
+    const candidate = body as Record<string, unknown>;
+    if (!candidate.arrivalDate || !candidate.arrivalTime) {
+      return NextResponse.json({ message: "Please enter your arrival date and time." }, { status: 400 });
+    }
   }
 
   const parsed = rsvpSchema.safeParse(body);

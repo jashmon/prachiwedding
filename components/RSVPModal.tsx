@@ -157,8 +157,8 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
       next.whatsappNumber = "Enter a 10- or 12-digit WhatsApp number.";
     }
     if (guestCount < 1 || guestCount > 10) next.guestCount = "Choose between 1 and 10 guests.";
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(arrivalDate)) next.arrivalDate = "Choose your arrival date.";
-    if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(arrivalTime)) next.arrivalTime = "Choose your arrival time.";
+    if (!ticket && !/^\d{4}-\d{2}-\d{2}$/.test(arrivalDate)) next.arrivalDate = "Choose your arrival date.";
+    if (!ticket && !/^([01]\d|2[0-3]):[0-5]\d$/.test(arrivalTime)) next.arrivalTime = "Choose your arrival time.";
     setErrors(next);
     return Object.keys(next).length === 0;
   };
