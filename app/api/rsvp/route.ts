@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { rsvpSchema, type RsvpRecord } from "@/lib/rsvp";
-import { saveRsvp, sendConfirmation } from "@/lib/rsvp-store";
+import { saveRsvp } from "@/lib/rsvp-store";
 
 export const runtime = "nodejs";
 
@@ -50,7 +50,6 @@ export async function POST(request: Request) {
 
   try {
     await saveRsvp(record);
-    void sendConfirmation(record).catch(() => undefined);
     return NextResponse.json({ ok: true, id: record.id }, { status: 201 });
   } catch (error) {
     console.error("RSVP persistence failed", error);

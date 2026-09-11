@@ -12,7 +12,7 @@ function getGoogleConfig() {
   const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   const privateKey = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY?.replace(/\\n/g, "\n");
   const spreadsheetId = process.env.GOOGLE_SHEET_ID;
-  const sheetRange = process.env.GOOGLE_SHEET_RANGE || "RSVPs!A:Z";
+  const sheetRange = process.env.GOOGLE_SHEET_RANGE || "Sheet1!A:Z";
   if (!email || !privateKey || !spreadsheetId) return null;
   return { email, privateKey, spreadsheetId, sheetRange };
 }
@@ -57,7 +57,7 @@ export async function appendRsvpToGoogleSheet(record: RsvpRecord) {
         record.id,
         record.createdAt,
         record.name,
-        record.email,
+        record.whatsappNumber,
         record.guestCount,
         record.arrivalDate,
         record.arrivalTime,

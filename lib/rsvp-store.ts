@@ -19,7 +19,10 @@ async function saveToSupabase(record: RsvpRecord) {
     body: JSON.stringify({
       id: record.id,
       name: record.name,
-      email: record.email,
+      // Preserve the original required `email` field for already-created tables.
+      // New installations also receive the correctly named `whatsapp_number` field.
+      email: record.whatsappNumber,
+      whatsapp_number: record.whatsappNumber,
       guest_count: record.guestCount,
       arrival_date: record.arrivalDate,
       arrival_time: record.arrivalTime,
@@ -81,23 +84,4 @@ export async function saveTicket(file: File) {
   });
   if (!response.ok) throw new Error("We could not securely save that ticket. Please try again.");
   return storagePath;
-}
-
-export async function sendConfirmation(record: RsvpRecord) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM_EMAIL;
-  if (!apiKey || !from) return;
-
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from,
-      to: [record.email],
-      subject: "Your RSVP for Prachi and Pratik",
-      text: `Thank you, ${record.name}. We have saved your RSVP for ${record.guestCount} guest${record.guestCount === 1 ? "" : "s"}. We cannot wait to celebrate together.`,
-    }),
-  });
-
-  if (!response.ok) console.error("RSVP saved, but the confirmation email could not be sent.");
 }

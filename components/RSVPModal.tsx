@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { ArrowRight, CalendarBlank, Minus, Paperclip, Plus, X } from "@phosphor-icons/react";
 import { wedding } from "@/data/wedding";
 
-type Errors = Partial<Record<"name" | "email" | "guestCount" | "arrivalDate" | "arrivalTime", string>>;
+type Errors = Partial<Record<"name" | "whatsappNumber" | "guestCount" | "arrivalDate" | "arrivalTime", string>>;
 type TicketUpload = { path: string; text?: string };
 
 function downloadCalendar() {
@@ -35,7 +35,7 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
   const nameInput = useRef<HTMLInputElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [whatsappNumber, setWhatsappNumber] = useState("");
   const [guestCount, setGuestCount] = useState(1);
   const [arrivalDate, setArrivalDate] = useState("");
   const [arrivalTime, setArrivalTime] = useState("");
@@ -84,7 +84,9 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
   const validate = () => {
     const next: Errors = {};
     if (name.trim().length < 2) next.name = "Please enter your name.";
-    if (!/^\S+@\S+\.\S+$/.test(email)) next.email = "Enter a valid email address.";
+    if (!/^\+?[0-9\s().-]{7,20}$/.test(whatsappNumber.trim())) {
+      next.whatsappNumber = "Enter a valid WhatsApp number, including the country code if needed.";
+    }
     if (guestCount < 1 || guestCount > 10) next.guestCount = "Choose between 1 and 10 guests.";
     if (!/^\d{4}-\d{2}-\d{2}$/.test(arrivalDate)) next.arrivalDate = "Choose your arrival date.";
     if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(arrivalTime)) next.arrivalTime = "Choose your arrival time.";
@@ -132,7 +134,7 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: name.trim(),
-          email: email.trim(),
+          whatsappNumber: whatsappNumber.trim(),
           guestCount,
           arrivalDate,
           arrivalTime,
@@ -145,7 +147,7 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
         if (payload.fields) {
           setErrors({
             name: payload.fields.name?.[0],
-            email: payload.fields.email?.[0],
+            whatsappNumber: payload.fields.whatsappNumber?.[0],
             guestCount: payload.fields.guestCount?.[0],
             arrivalDate: payload.fields.arrivalDate?.[0],
             arrivalTime: payload.fields.arrivalTime?.[0],
@@ -226,21 +228,21 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
                 {errors.guestCount ? <p className="field-error">{errors.guestCount}</p> : null}
               </div>
 
-              <div className={`form-field${errors.email ? " has-error" : ""}`}>
-                <label htmlFor="rsvp-email">Email</label>
+              <div className={`form-field${errors.whatsappNumber ? " has-error" : ""}`}>
+                <label htmlFor="rsvp-whatsapp">WhatsApp number</label>
                 <input
-                  id="rsvp-email"
-                  name="email"
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  aria-describedby={errors.email ? "rsvp-email-error" : undefined}
-                  aria-invalid={Boolean(errors.email)}
+                  id="rsvp-whatsapp"
+                  name="whatsapp-number"
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  placeholder="+91 98765 43210"
+                  value={whatsappNumber}
+                  onChange={(event) => setWhatsappNumber(event.target.value)}
+                  aria-describedby={errors.whatsappNumber ? "rsvp-whatsapp-error" : undefined}
+                  aria-invalid={Boolean(errors.whatsappNumber)}
                 />
-                {errors.email ? <p id="rsvp-email-error" className="field-error">{errors.email}</p> : null}
+                {errors.whatsappNumber ? <p id="rsvp-whatsapp-error" className="field-error">{errors.whatsappNumber}</p> : null}
               </div>
 
               <div className={`form-field${errors.arrivalDate ? " has-error" : ""}`}>

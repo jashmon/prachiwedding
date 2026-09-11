@@ -4,6 +4,7 @@ create table if not exists public.rsvps (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   email text not null,
+  whatsapp_number text not null,
   guest_count integer not null check (guest_count between 1 and 10),
   arrival_date date not null,
   arrival_time time not null,
@@ -16,6 +17,7 @@ alter table public.rsvps add column if not exists arrival_date date;
 alter table public.rsvps add column if not exists arrival_time time;
 alter table public.rsvps add column if not exists ticket_path text;
 alter table public.rsvps add column if not exists ticket_ocr_text text;
+alter table public.rsvps add column if not exists whatsapp_number text;
 
 -- Existing tables created before the required arrival fields need this after
 -- historical rows have been populated or removed.
