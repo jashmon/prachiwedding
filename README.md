@@ -29,7 +29,7 @@ The RSVP endpoint validates submissions on the server and rate limits repeated a
 
 ### Ticket OCR service
 
-The OCR service is intentionally separate from Vercel: PaddleOCR is a native Python workload and is too large for a dependable serverless request. Deploy the `ocr-service` directory to a Docker host such as Render, Railway, Fly.io, or a private VM. Configure the same random `OCR_SERVICE_TOKEN` on that service and in Vercel, and do not expose its URL publicly without the token.
+The OCR service is intentionally separate from Vercel: PaddleOCR is a native Python workload and is too large for a dependable serverless request. Deploy the `ocr-service` directory to a Docker host such as Render, Railway, Fly.io, or a private VM. For Railway, select this repository, set the root directory to `/ocr-service`, configure `OCR_SERVICE_TOKEN`, and expose the service through public networking. The included `railway.json` configures the Docker build, `/health`, and Railway's `PORT`. Add the generated public URL and the same token to Vercel, and do not expose the OCR endpoint without its token.
 
 ```bash
 cd ocr-service
