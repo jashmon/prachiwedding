@@ -3,9 +3,16 @@ import path from "node:path";
 import { appendRsvpToGoogleSheet } from "./google-sheets";
 import type { RsvpRecord } from "./rsvp";
 
+function getSupabaseConfig() {
+  return {
+    url: process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL,
+    key: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SECRET,
+    bucket: process.env.SUPABASE_TICKETS_BUCKET || "travel-tickets",
+  };
+}
+
 async function saveToSupabase(record: RsvpRecord) {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const { url, key } = getSupabaseConfig();
   if (!url || !key) return false;
 
   const response = await fetch(`${url}/rest/v1/rsvps`, {
@@ -65,9 +72,7 @@ export function validateTicket(file: File) {
 
 export async function saveTicket(file: File) {
   validateTicket(file);
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const bucket = process.env.SUPABASE_TICKETS_BUCKET || "travel-tickets";
+  const { url, key, bucket } = getSupabaseConfig();
   if (!url || !key) throw new Error("Ticket uploads are not configured yet.");
 
   const extension = file.name.split(".").pop()?.replace(/[^a-z0-9]/gi, "").toLowerCase() || "file";
