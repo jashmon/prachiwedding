@@ -21,8 +21,19 @@ export async function appendRsvpToGoogleSheet(record: RsvpRecord) {
       ticketOcrText: record.ticketOcrText || "",
     }),
   });
-  if (!response.ok) throw new Error("Google Sheets could not save this RSVP. Please try again.");
-  const payload = await response.json().catch(() => null) as { ok?: boolean } | null;
-  if (!payload?.ok) throw new Error("Google Sheets could not save this RSVP. Please try again.");
+  const responseText = await response.text();
+  let payload: { ok?: boolean; message?: string } | null = null;
+  try {
+    payload = JSON.parse(responseText) as { ok?: boolean; message?: string };
+  } catch {
+    // Google returns an HTML authorization page when the web app has not been
+    // authorized or deployed for anonymous access.
+  }
+
+  if (!response.ok || !payload?.ok) {
+    const detail = payload?.message || `HTTP ${response.status}; response type ${response.headers.get("content-type") || "unknown"}`;
+    console.error("Google Sheets RSVP append failed:", detail);
+    throw new Error("Google Sheets could not save this RSVP. Please try again.");
+  }
   return true;
 }
