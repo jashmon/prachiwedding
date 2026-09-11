@@ -130,8 +130,9 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
   const validate = () => {
     const next: Errors = {};
     if (name.trim().length < 2) next.name = "Please enter your name.";
-    if (!/^\+?[0-9\s().-]{7,20}$/.test(whatsappNumber.trim())) {
-      next.whatsappNumber = "Enter a valid WhatsApp number, including the country code if needed.";
+    const whatsappDigits = whatsappNumber.replace(/\D/g, "");
+    if (!/^\+?[0-9\s().-]+$/.test(whatsappNumber.trim()) || ![10, 12].includes(whatsappDigits.length)) {
+      next.whatsappNumber = "Enter a 10- or 12-digit WhatsApp number.";
     }
     if (guestCount < 1 || guestCount > 10) next.guestCount = "Choose between 1 and 10 guests.";
     if (!/^\d{4}-\d{2}-\d{2}$/.test(arrivalDate)) next.arrivalDate = "Choose your arrival date.";

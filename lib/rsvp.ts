@@ -5,8 +5,9 @@ export const rsvpSchema = z.object({
   whatsappNumber: z
     .string()
     .trim()
-    .regex(/^\+?[0-9\s().-]{7,20}$/, "Enter a valid WhatsApp number, including the country code if needed.")
-    .max(20),
+    .regex(/^\+?[0-9\s().-]+$/, "Enter a valid WhatsApp number.")
+    .refine((value) => [10, 12].includes(value.replace(/\D/g, "").length), "Enter a 10- or 12-digit WhatsApp number.")
+    .max(25),
   guestCount: z.number().int().min(1).max(10),
   arrivalDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Choose your arrival date."),
   arrivalTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Choose your arrival time."),
