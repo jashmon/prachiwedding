@@ -63,11 +63,12 @@ export async function saveRsvp(record: RsvpRecord) {
 }
 
 const allowedTicketTypes = new Set(["application/pdf", "image/jpeg", "image/png", "image/webp"]);
-const ticketMaxBytes = 4 * 1024 * 1024;
+// Keep a margin below Vercel's multipart request limit.
+const ticketMaxBytes = 3.5 * 1024 * 1024;
 
 export function validateTicket(file: File) {
   if (!allowedTicketTypes.has(file.type)) throw new Error("Upload a PDF, JPG, PNG, or WEBP ticket.");
-  if (file.size === 0 || file.size > ticketMaxBytes) throw new Error("Ticket files must be 4 MB or smaller.");
+  if (file.size === 0 || file.size > ticketMaxBytes) throw new Error("Ticket files must be 3.5 MB or smaller.");
 }
 
 export async function saveTicket(file: File) {

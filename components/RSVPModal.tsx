@@ -14,6 +14,28 @@ async function canvasToBlob(canvas: HTMLCanvasElement) {
   });
 }
 
+const maxTicketUploadBytes = 3.5 * 1024 * 1024;
+
+async function prepareTicketUpload(file: File): Promise<File> {
+  if (file.size <= maxTicketUploadBytes || !file.type.startsWith("image/")) {
+    if (file.size > maxTicketUploadBytes) throw new Error("Please choose a ticket file smaller than 3.5 MB.");
+    return file;
+  }
+
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, 1800 / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+  canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((value) => value ? resolve(value) : reject(new Error("The ticket image could not be prepared.")), "image/jpeg", 0.8);
+  });
+  if (blob.size > maxTicketUploadBytes) throw new Error("Please choose a ticket image smaller than 3.5 MB.");
+  return new File([blob], `${file.name.replace(/\.[^.]+$/, "")}.jpg`, { type: "image/jpeg" });
+}
+
 async function recognizeText(input: File | Blob): Promise<string> {
   const { createWorker } = await import("tesseract.js");
   const worker = await createWorker("eng");
@@ -154,8 +176,9 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
         // A ticket that cannot be read can still be privately saved and entered manually.
       }
       setTicketMessage("Saving your ticket…");
+      const uploadFile = await prepareTicketUpload(file);
       const formData = new FormData();
-      formData.append("ticket", file);
+      formData.append("ticket", uploadFile);
       const response = await fetch("/api/ticket", { method: "POST", body: formData });
       const payload = await response.json() as {
         message?: string;
