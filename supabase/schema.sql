@@ -18,11 +18,8 @@ alter table public.rsvps add column if not exists arrival_time time;
 alter table public.rsvps add column if not exists ticket_path text;
 alter table public.rsvps add column if not exists ticket_ocr_text text;
 alter table public.rsvps add column if not exists whatsapp_number text;
-
--- Existing tables created before the required arrival fields need this after
--- historical rows have been populated or removed.
--- alter table public.rsvps alter column arrival_date set not null;
--- alter table public.rsvps alter column arrival_time set not null;
+alter table public.rsvps alter column arrival_date drop not null;
+alter table public.rsvps alter column arrival_time drop not null;
 
 alter table public.rsvps enable row level security;
 
