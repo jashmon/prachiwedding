@@ -190,15 +190,18 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
       };
       if (!response.ok || !payload.ticketPath) throw new Error(payload.message || "We could not process that ticket.");
       const extraction = {
-        text: localExtraction.text || payload.extraction?.text,
-        arrivalDate: localExtraction.arrivalDate || payload.extraction?.arrivalDate,
-        arrivalTime: localExtraction.arrivalTime || payload.extraction?.arrivalTime,
+        // The server's PDF text extraction is authoritative. Browser OCR is
+        // the fallback for image tickets, where the server has no text layer.
+        text: payload.extraction?.text || localExtraction.text,
+        arrivalDate: payload.extraction?.arrivalDate || localExtraction.arrivalDate,
+        arrivalTime: payload.extraction?.arrivalTime || localExtraction.arrivalTime,
       };
+      if (!extraction.text || !extraction.arrivalDate || !extraction.arrivalTime) {
+        throw new Error("We could not read an arrival date and time from that ticket. Please use a clearer ticket or enter the details manually.");
+      }
       setTicket({ path: payload.ticketPath, text: extraction.text });
       setTicketStatus("ready");
-      setTicketMessage(extraction.arrivalDate || extraction.arrivalTime
-        ? "Ticket saved. Its arrival details will be used for your RSVP."
-        : "Ticket saved. We could not read its arrival details, but it will be included with your RSVP.");
+      setTicketMessage("Ticket read successfully. Its arrival details will be used for your RSVP.");
     } catch (error) {
       setTicketStatus("error");
       setTicketMessage(error instanceof Error ? error.message : "We could not process that ticket.");
