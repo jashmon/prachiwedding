@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { saveTicket, validateTicket } from "@/lib/rsvp-store";
 import { extractTicketDetails } from "@/lib/ticket-details";
+// Register PDF.js' worker code in this server bundle. PDF.js detects this
+// global and uses its in-process worker, rather than trying to import a file
+// that Vercel's function bundler does not ship beside the route.
+import "pdfjs-dist/legacy/build/pdf.worker.mjs";
 
 export const runtime = "nodejs";
 
