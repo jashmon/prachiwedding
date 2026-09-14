@@ -13,7 +13,7 @@ export const wedding = {
   dressCode: "Come dressed to celebrate",
   contacts: [
     { name: "Raju Arya", phone: "9326334345" },
-    { name: "Daksh Arya", phone: "7030607346" },
+    { name: "Harish Vaswani", phone: "9823061214" },
   ],
   inviteLine: "After six years, we are making it official.",
   blessing: "शुभ विवाह",
