@@ -6,7 +6,6 @@ export default function Home() {
     "@context": "https://schema.org",
     "@type": "Event",
     name: `${wedding.bride} and ${wedding.groom}'s wedding`,
-    startDate: wedding.dateISO,
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     location: { "@type": "Place", name: wedding.venue, address: wedding.city },

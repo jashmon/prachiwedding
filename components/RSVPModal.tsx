@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { ArrowRight, CalendarBlank, Minus, Paperclip, Plus, X } from "@phosphor-icons/react";
+import { ArrowRight, Minus, Paperclip, Plus, X } from "@phosphor-icons/react";
 import { wedding } from "@/data/wedding";
 import { extractTicketDetails, type TicketDetails } from "@/lib/ticket-details";
 
@@ -73,29 +73,6 @@ async function readTicketOnDevice(file: File): Promise<TicketDetails> {
   if (!context) throw new Error("Your browser could not prepare that PDF.");
   await page.render({ canvas, canvasContext: context, viewport }).promise;
   return extractTicketDetails(await recognizeText(await canvasToBlob(canvas)));
-}
-
-function downloadCalendar() {
-  const content = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Prachi and Pratik//Wedding//EN",
-    "BEGIN:VEVENT",
-    "UID:prachi-pratik-20261024@wedding",
-    "DTSTAMP:20260821T120000Z",
-    "DTSTART;VALUE=DATE:20261024",
-    "DTEND;VALUE=DATE:20261025",
-    "SUMMARY:Prachi and Pratik's Wedding",
-    "DESCRIPTION:Come celebrate with Prachi and Pratik.",
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n");
-  const url = URL.createObjectURL(new Blob([content], { type: "text/calendar;charset=utf-8" }));
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = "prachi-pratik-wedding.ics";
-  anchor.click();
-  URL.revokeObjectURL(url);
 }
 
 export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -268,9 +245,6 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
             <h2 id="rsvp-title">We cannot wait<br />to celebrate with you.</h2>
             <p>Your RSVP has been received for {guestCount} {guestCount === 1 ? "guest" : "guests"}.</p>
             <div className="success-actions">
-              <button type="button" className="outline-button" onClick={downloadCalendar}>
-                <CalendarBlank size={18} weight="light" /> Add to calendar
-              </button>
               <button type="button" className="text-button" onClick={onClose}>Close</button>
             </div>
           </div>

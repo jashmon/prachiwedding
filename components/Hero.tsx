@@ -30,7 +30,7 @@ export function Hero({ onRsvp }: { onRsvp: () => void }) {
               <span className="hero-groom">{wedding.groom}</span>
             </h1>
             <div className="hero-foot">
-              <p className="hero-date">{wedding.day}<br />24 October 2026</p>
+              <p className="hero-date">{wedding.devanagari.invited}</p>
               <button type="button" className="hero-rsvp" onClick={onRsvp} aria-label="RSVP now">
                 <span>RSVP</span><small>Reply now</small><span aria-hidden="true">↗</span>
               </button>

@@ -16,8 +16,8 @@ const bakers = localFont({
 
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
-  title: "Prachi & Pratik | 24 October 2026",
-  description: "You are invited to celebrate Prachi and Pratik on 24 October 2026.",
+  title: "Prachi & Pratik",
+  description: "You are invited to celebrate Prachi and Pratik.",
   icons: { icon: "/favicon.svg" },
   openGraph: {
     title: "Prachi & Pratik",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Prachi & Pratik",
-    description: "24 October 2026",
+    description: "You are invited to celebrate with us.",
     images: ["/images/og-image.jpg"],
   },
 };
