@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { rsvpSchema, type RsvpRecord } from "@/lib/rsvp";
 import { saveRsvp } from "@/lib/rsvp-store";
+import { extractTicketDetails } from "@/lib/ticket-details";
 
 export const runtime = "nodejs";
 
@@ -32,6 +33,20 @@ export async function POST(request: Request) {
     body = await request.json();
   } catch {
     return NextResponse.json({ message: "We could not read that RSVP." }, { status: 400 });
+  }
+
+  // A ticket replaces manual arrival input. Only OCR-derived timing is stored
+  // for ticket RSVPs, even if the guest had started filling those fields.
+  if (body && typeof body === "object" && "ticketPath" in body) {
+    const candidate = body as Record<string, unknown>;
+    const extracted = typeof candidate.ticketOcrText === "string" ? extractTicketDetails(candidate.ticketOcrText) : {};
+    candidate.arrivalDate = extracted.arrivalDate || "";
+    candidate.arrivalTime = extracted.arrivalTime || "";
+  } else if (body && typeof body === "object") {
+    const candidate = body as Record<string, unknown>;
+    if (!candidate.arrivalDate || !candidate.arrivalTime) {
+      return NextResponse.json({ message: "Please enter your arrival date and time." }, { status: 400 });
+    }
   }
 
   const parsed = rsvpSchema.safeParse(body);
