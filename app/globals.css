@@ -828,12 +828,21 @@ button:disabled { cursor: not-allowed; }
   .closing-meta button { width: 100%; min-height: 58px; justify-content: space-between; }
   .closing-ornament { right: 18px; bottom: 28px; left: 18px; }
   .rsvp-panel { width: 100%; min-height: 100svh; max-height: 100dvh; padding: calc(72px + env(safe-area-inset-top)) 24px max(32px, env(safe-area-inset-bottom)); transition-duration: 440ms; }
-  .rsvp-draw-border { inset: 8px; }
+  /* The desktop frame is tied to a fixed-height panel. On mobile browsers the
+     dynamic address bar can move its bottom rule over a scrolled form field. */
+  .rsvp-draw-border { display: none; }
   .rsvp-close { top: 18px; right: 18px; }
   .rsvp-heading h2, .rsvp-success h2 { font-size: clamp(3.2rem, 14vw, 4.2rem); letter-spacing: -0.03em; line-height: .95; }
   .rsvp-heading > p:last-child { font-size: 0.9rem; }
   .rsvp-form-wrap form { grid-template-columns: 1fr; gap: 24px; margin-top: 42px; }
   .form-field, .form-field:first-child, .form-field:nth-child(3), .ticket-field, .form-status, .submit-rsvp { grid-column: auto; }
+  .form-field input {
+    min-height: 58px;
+    height: auto;
+    padding: 10px 0 9px;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
   .submit-rsvp {
     width: 100%;
     min-height: 64px;
