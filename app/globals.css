@@ -634,9 +634,9 @@ button:disabled { cursor: not-allowed; }
 .form-field { position: relative; }
 .form-field:first-child, .form-field:nth-child(3), .ticket-field, .form-status, .submit-rsvp { grid-column: 1 / -1; }
 .choice-field { grid-column: 1 / -1; min-width: 0; padding: 0; border: 0; }
-.choice-field legend { margin-bottom: 12px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; }
+.choice-field legend { margin-bottom: 12px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.055em; line-height: 1.5; }
 .choice-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.choice-options label { display: grid; min-height: 52px; align-items: center; padding: 0 16px; border: 1px solid rgba(23, 23, 19, 0.45); color: var(--ink-soft); cursor: pointer; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease; }
+.choice-options label { display: grid; min-height: 54px; align-items: center; padding: 0 16px; border: 1px solid rgba(23, 23, 19, 0.45); color: var(--ink-soft); cursor: pointer; font-size: 0.86rem; font-weight: 700; letter-spacing: 0.02em; transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease; }
 .choice-options label:hover, .choice-options label.is-selected { border-color: var(--ink); background: var(--ink); color: var(--paper); }
 .choice-options label:hover span, .choice-options label.is-selected span { color: var(--paper); }
 .choice-options input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; pointer-events: none; }
@@ -837,6 +837,8 @@ button:disabled { cursor: not-allowed; }
   .rsvp-heading > p:last-child { font-size: 0.9rem; }
   .rsvp-form-wrap form { grid-template-columns: 1fr; gap: 24px; margin-top: 42px; }
   .form-field, .form-field:first-child, .form-field:nth-child(3), .ticket-field, .form-status, .submit-rsvp { grid-column: auto; }
+  .choice-field legend { font-size: 0.95rem; letter-spacing: 0.035em; }
+  .choice-options label { min-height: 58px; font-size: 0.96rem; }
   .form-field input {
     min-height: 58px;
     height: auto;
