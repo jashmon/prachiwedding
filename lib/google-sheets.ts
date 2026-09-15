@@ -14,6 +14,7 @@ export async function appendRsvpToGoogleSheet(record: RsvpRecord) {
       createdAt: record.createdAt,
       name: record.name,
       whatsappNumber: record.whatsappNumber,
+      guestSide: record.guestSide,
       guestCount: record.guestCount,
       arrivalDate: record.arrivalDate,
       arrivalTime: record.arrivalTime,

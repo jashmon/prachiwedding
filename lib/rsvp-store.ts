@@ -30,6 +30,7 @@ async function saveToSupabase(record: RsvpRecord) {
       // New installations also receive the correctly named `whatsapp_number` field.
       email: record.whatsappNumber,
       whatsapp_number: record.whatsappNumber,
+      guest_side: record.guestSide,
       guest_count: record.guestCount,
       arrival_date: record.arrivalDate || null,
       arrival_time: record.arrivalTime || null,

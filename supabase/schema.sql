@@ -5,6 +5,7 @@ create table if not exists public.rsvps (
   name text not null,
   email text not null,
   whatsapp_number text not null,
+  guest_side text not null check (guest_side in ('bride', 'groom')),
   guest_count integer not null check (guest_count between 1 and 10),
   arrival_date date not null,
   arrival_time time not null,
@@ -18,6 +19,7 @@ alter table public.rsvps add column if not exists arrival_time time;
 alter table public.rsvps add column if not exists ticket_path text;
 alter table public.rsvps add column if not exists ticket_ocr_text text;
 alter table public.rsvps add column if not exists whatsapp_number text;
+alter table public.rsvps add column if not exists guest_side text;
 alter table public.rsvps alter column arrival_date drop not null;
 alter table public.rsvps alter column arrival_time drop not null;
 

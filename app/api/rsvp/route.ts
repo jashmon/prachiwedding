@@ -35,8 +35,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "We could not read that RSVP." }, { status: 400 });
   }
 
-  // A ticket replaces manual arrival input. Only OCR-derived timing is stored
-  // for ticket RSVPs, even if the guest had started filling those fields.
+  // An uploaded ticket replaces manual arrival input. Only OCR-derived timing
+  // is stored for ticket RSVPs, even if the guest had started filling fields.
   if (body && typeof body === "object" && "ticketPath" in body) {
     const candidate = body as Record<string, unknown>;
     const extracted = typeof candidate.ticketOcrText === "string" ? extractTicketDetails(candidate.ticketOcrText) : {};
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     candidate.arrivalTime = extracted.arrivalTime || "";
   } else if (body && typeof body === "object") {
     const candidate = body as Record<string, unknown>;
-    if (!candidate.arrivalDate || !candidate.arrivalTime) {
+    if (candidate.hasTicket === true && (!candidate.arrivalDate || !candidate.arrivalTime)) {
       return NextResponse.json({ message: "Please enter your arrival date and time." }, { status: 400 });
     }
   }

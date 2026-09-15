@@ -5,8 +5,9 @@ import { ArrowRight, Minus, Paperclip, Plus, X } from "@phosphor-icons/react";
 import { wedding } from "@/data/wedding";
 import { extractTicketDetails, type TicketDetails } from "@/lib/ticket-details";
 
-type Errors = Partial<Record<"name" | "whatsappNumber" | "guestCount" | "arrivalDate" | "arrivalTime", string>>;
+type Errors = Partial<Record<"hasTicket" | "guestSide" | "name" | "whatsappNumber" | "guestCount" | "arrivalDate" | "arrivalTime", string>>;
 type TicketUpload = { path: string; text?: string };
+type GuestSide = "bride" | "groom";
 
 async function canvasToBlob(canvas: HTMLCanvasElement) {
   return new Promise<Blob>((resolve, reject) => {
@@ -81,6 +82,8 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
   const previousFocus = useRef<HTMLElement | null>(null);
   const [name, setName] = useState("");
   const [whatsappNumber, setWhatsappNumber] = useState("");
+  const [hasTicket, setHasTicket] = useState<boolean | null>(null);
+  const [guestSide, setGuestSide] = useState<GuestSide | "">("");
   const [guestCount, setGuestCount] = useState(1);
   const [arrivalDate, setArrivalDate] = useState("");
   const [arrivalTime, setArrivalTime] = useState("");
@@ -128,16 +131,34 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
 
   const validate = () => {
     const next: Errors = {};
+    if (hasTicket === null) next.hasTicket = "Please choose an option.";
+    if (!guestSide) next.guestSide = "Please choose a side.";
     if (name.trim().length < 2) next.name = "Please enter your name.";
     const whatsappDigits = whatsappNumber.replace(/\D/g, "");
     if (!/^\+?[0-9\s().-]+$/.test(whatsappNumber.trim()) || ![10, 12].includes(whatsappDigits.length)) {
       next.whatsappNumber = "Enter a 10- or 12-digit WhatsApp number.";
     }
-    if (guestCount < 1 || guestCount > 10) next.guestCount = "Choose between 1 and 10 guests.";
-    if (!ticket && !/^\d{4}-\d{2}-\d{2}$/.test(arrivalDate)) next.arrivalDate = "Choose your arrival date.";
-    if (!ticket && !/^([01]\d|2[0-3]):[0-5]\d$/.test(arrivalTime)) next.arrivalTime = "Choose your arrival time.";
+    if (hasTicket) {
+      if (guestCount < 1 || guestCount > 10) next.guestCount = "Choose between 1 and 10 guests.";
+      if (!ticket && !/^\d{4}-\d{2}-\d{2}$/.test(arrivalDate)) next.arrivalDate = "Choose your arrival date.";
+      if (!ticket && !/^([01]\d|2[0-3]):[0-5]\d$/.test(arrivalTime)) next.arrivalTime = "Choose your arrival time.";
+    }
     setErrors(next);
     return Object.keys(next).length === 0;
+  };
+
+  const chooseTicketStatus = (value: boolean) => {
+    setHasTicket(value);
+    setErrors((current) => ({ ...current, hasTicket: undefined }));
+    if (!value) {
+      setTicket(null);
+      setTicketStatus("idle");
+      setTicketMessage("");
+      setArrivalDate("");
+      setArrivalTime("");
+      setGuestCount(1);
+      setErrors((current) => ({ ...current, hasTicket: undefined, guestCount: undefined, arrivalDate: undefined, arrivalTime: undefined }));
+    }
   };
 
   const uploadTicket = async (file: File | undefined) => {
@@ -198,11 +219,13 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
         body: JSON.stringify({
           name: name.trim(),
           whatsappNumber: whatsappNumber.trim(),
-          guestCount,
-          arrivalDate: ticket ? "" : arrivalDate,
-          arrivalTime: ticket ? "" : arrivalTime,
-          ticketPath: ticket?.path,
-          ticketOcrText: ticket?.text,
+          guestSide,
+          hasTicket,
+          guestCount: hasTicket ? guestCount : 1,
+          arrivalDate: hasTicket && !ticket ? arrivalDate : "",
+          arrivalTime: hasTicket && !ticket ? arrivalTime : "",
+          ticketPath: hasTicket ? ticket?.path : undefined,
+          ticketOcrText: hasTicket ? ticket?.text : undefined,
         }),
       });
       const payload = await response.json() as { message?: string; fields?: Record<string, string[]> };
@@ -211,6 +234,7 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
           setErrors({
             name: payload.fields.name?.[0],
             whatsappNumber: payload.fields.whatsappNumber?.[0],
+            guestSide: payload.fields.guestSide?.[0],
             guestCount: payload.fields.guestCount?.[0],
             arrivalDate: payload.fields.arrivalDate?.[0],
             arrivalTime: payload.fields.arrivalTime?.[0],
@@ -257,6 +281,36 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
             </header>
 
             <form onSubmit={submit} noValidate>
+              <fieldset className={`form-field choice-field${errors.hasTicket ? " has-error" : ""}`}>
+                <legend>Do you have a ticket for your travel booked?</legend>
+                <div className="choice-options" role="radiogroup" aria-describedby={errors.hasTicket ? "ticket-choice-error" : undefined}>
+                  <label className={hasTicket === true ? "is-selected" : ""}>
+                    <input type="radio" name="has-ticket" checked={hasTicket === true} onChange={() => chooseTicketStatus(true)} />
+                    <span>Yes, I do</span>
+                  </label>
+                  <label className={hasTicket === false ? "is-selected" : ""}>
+                    <input type="radio" name="has-ticket" checked={hasTicket === false} onChange={() => chooseTicketStatus(false)} />
+                    <span>Not yet</span>
+                  </label>
+                </div>
+                {errors.hasTicket ? <p id="ticket-choice-error" className="field-error">{errors.hasTicket}</p> : null}
+              </fieldset>
+
+              <fieldset className={`form-field choice-field${errors.guestSide ? " has-error" : ""}`}>
+                <legend>Are you from the ladki wale side or ladke wale side?</legend>
+                <div className="choice-options" role="radiogroup" aria-describedby={errors.guestSide ? "guest-side-error" : undefined}>
+                  <label className={guestSide === "bride" ? "is-selected" : ""}>
+                    <input type="radio" name="guest-side" checked={guestSide === "bride"} onChange={() => { setGuestSide("bride"); setErrors((current) => ({ ...current, guestSide: undefined })); }} />
+                    <span>Ladki wale</span>
+                  </label>
+                  <label className={guestSide === "groom" ? "is-selected" : ""}>
+                    <input type="radio" name="guest-side" checked={guestSide === "groom"} onChange={() => { setGuestSide("groom"); setErrors((current) => ({ ...current, guestSide: undefined })); }} />
+                    <span>Ladke wale</span>
+                  </label>
+                </div>
+                {errors.guestSide ? <p id="guest-side-error" className="field-error">{errors.guestSide}</p> : null}
+              </fieldset>
+
               <div className={`form-field${errors.name ? " has-error" : ""}`}>
                 <label htmlFor="rsvp-name">Your name</label>
                 <input
@@ -274,6 +328,7 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
                 {errors.name ? <p id="rsvp-name-error" className="field-error">{errors.name}</p> : null}
               </div>
 
+              {hasTicket ? <>
               <div className={`form-field counter-field${errors.guestCount ? " has-error" : ""}`}>
                 <label id="guest-count-label">How many of you will be joining us?</label>
                 <div className="guest-counter" role="group" aria-labelledby="guest-count-label">
@@ -349,6 +404,7 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
                 <p id="arrival-help" className="ticket-help"><Paperclip size={15} weight="light" /> Enter your travel details, or upload a ticket instead. We read the ticket privately and use its details for your RSVP.</p>
                 {ticketStatus !== "idle" ? <p className={`ticket-status is-${ticketStatus}`} role="status">{ticketMessage}</p> : null}
               </div>
+              </> : null}
 
               <p className="form-status" role="status" aria-live="polite">
                 {status === "error" ? serverMessage : status === "loading" ? "Saving your place..." : ""}

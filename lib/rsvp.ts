@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 export const rsvpSchema = z.object({
+  hasTicket: z.boolean(),
+  guestSide: z.enum(["bride", "groom"], { error: "Please choose a side." }),
   name: z.string().trim().min(2, "Please enter your name.").max(100),
   whatsappNumber: z
     .string()
