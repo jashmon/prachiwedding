@@ -290,7 +290,7 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
                   </label>
                   <label className={hasTicket === false ? "is-selected" : ""}>
                     <input type="radio" name="has-ticket" checked={hasTicket === false} onChange={() => chooseTicketStatus(false)} />
-                    <span>Not yet</span>
+                    <span>No</span>
                   </label>
                 </div>
                 {errors.hasTicket ? <p id="ticket-choice-error" className="field-error">{errors.hasTicket}</p> : null}
@@ -328,21 +328,6 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
                 {errors.name ? <p id="rsvp-name-error" className="field-error">{errors.name}</p> : null}
               </div>
 
-              {hasTicket ? <>
-              <div className={`form-field counter-field${errors.guestCount ? " has-error" : ""}`}>
-                <label id="guest-count-label">How many of you will be joining us?</label>
-                <div className="guest-counter" role="group" aria-labelledby="guest-count-label">
-                  <button type="button" onClick={() => setGuestCount((count) => Math.max(1, count - 1))} disabled={guestCount === 1} aria-label="Remove one guest">
-                    <Minus size={20} weight="light" />
-                  </button>
-                  <output aria-live="polite">{guestCount}</output>
-                  <button type="button" onClick={() => setGuestCount((count) => Math.min(10, count + 1))} disabled={guestCount === 10} aria-label="Add one guest">
-                    <Plus size={20} weight="light" />
-                  </button>
-                </div>
-                {errors.guestCount ? <p className="field-error">{errors.guestCount}</p> : null}
-              </div>
-
               <div className={`form-field${errors.whatsappNumber ? " has-error" : ""}`}>
                 <label htmlFor="rsvp-whatsapp">WhatsApp number</label>
                 <input
@@ -358,6 +343,21 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
                   aria-invalid={Boolean(errors.whatsappNumber)}
                 />
                 {errors.whatsappNumber ? <p id="rsvp-whatsapp-error" className="field-error">{errors.whatsappNumber}</p> : null}
+              </div>
+
+              {hasTicket ? <>
+              <div className={`form-field counter-field${errors.guestCount ? " has-error" : ""}`}>
+                <label id="guest-count-label">How many of you will be joining us?</label>
+                <div className="guest-counter" role="group" aria-labelledby="guest-count-label">
+                  <button type="button" onClick={() => setGuestCount((count) => Math.max(1, count - 1))} disabled={guestCount === 1} aria-label="Remove one guest">
+                    <Minus size={20} weight="light" />
+                  </button>
+                  <output aria-live="polite">{guestCount}</output>
+                  <button type="button" onClick={() => setGuestCount((count) => Math.min(10, count + 1))} disabled={guestCount === 10} aria-label="Add one guest">
+                    <Plus size={20} weight="light" />
+                  </button>
+                </div>
+                {errors.guestCount ? <p className="field-error">{errors.guestCount}</p> : null}
               </div>
 
               <div className={`form-field${errors.arrivalDate ? " has-error" : ""}`}>
