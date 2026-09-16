@@ -361,7 +361,7 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
               </div>
 
               <div className={`form-field${errors.arrivalDate ? " has-error" : ""}`}>
-                <label htmlFor="arrival-date">Date</label>
+                <label htmlFor="arrival-date">What date are you coming?</label>
                 <input
                   id="arrival-date"
                   name="arrival-date"
@@ -376,7 +376,7 @@ export function RSVPModal({ open, onClose }: { open: boolean; onClose: () => voi
               </div>
 
               <div className={`form-field${errors.arrivalTime ? " has-error" : ""}`}>
-                <label htmlFor="arrival-time">Time</label>
+                <label htmlFor="arrival-time">What time are you arriving in NGP?</label>
                 <input
                   id="arrival-time"
                   name="arrival-time"
